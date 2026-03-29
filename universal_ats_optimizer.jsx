@@ -272,9 +272,9 @@ function ScoreDonut({ score: scoreObj }) {
   const emoji = score >= 90 ? "🟢" : score >= 75 ? "🟡" : "🔴";
   const circ = 131.9;
   return (
-    <div className="ats-score-donut-wrap" style={{ margin: "14px 20px 0", animation: "ats-fadein .4s", minWidth: 0 }}>
+    <div style={{ margin: "14px 20px 0", animation: "ats-fadein .4s" }}>
       {/* Score row */}
-      <div className="ats-score-donut-row" style={{ background: "linear-gradient(135deg,#f0fdf4,#f5f0ff)", border: "1px solid #e9d5ff", borderRadius: 10, padding: "14px 16px", marginBottom: matched.length > 0 ? 10 : 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 16, background: "linear-gradient(135deg,#f0fdf4,#f5f0ff)", border: "1px solid #e9d5ff", borderRadius: 10, padding: "14px 16px", marginBottom: matched.length > 0 ? 10 : 0 }}>
         <svg width="58" height="58" viewBox="0 0 58 58">
           <circle cx="29" cy="29" r="22" fill="none" stroke="#e9d5ff" strokeWidth="6" />
           <circle cx="29" cy="29" r="22" fill="none" stroke={color} strokeWidth="6"
@@ -579,11 +579,10 @@ export default function ATSForge() {
         }
         @media(max-width: 768px) {
           .ats-grid-container { grid-template-columns: 1fr !important; }
-          .ats-main-grid { grid-template-columns: 1fr !important; }
-          .ats-nav { flex-direction: column !important; gap: 15px !important; padding: 15px !important; }
-          .ats-nav-badges { flex-wrap: wrap !important; justify-content: center !important; position: relative !important; left: 0 !important; transform: none !important; }
-          /* Fix Hero padding */
-          .ats-hero { padding: 40px 20px !important; }
+          .ats-nav { flex-direction: column !important; align-items: stretch !important; gap: 4px !important; padding: 6px 12px 8px !important; }
+          /* Hero: tight under nav bar (progress hidden on phone) */
+          .ats-hero { padding: 6px 16px 28px !important; }
+          .ats-hero-badge { margin-bottom: 12px !important; }
           .ats-how-it-works { flex-direction: column !important; align-items: center !important; }
           .ats-how-it-works > div { border-radius: 12px !important; border: 1px solid #ebebeb !important; margin-bottom: 15px !important; width: 100% !important; max-width: 300px !important; border-left: 1px solid #ebebeb !important; border-top: none !important; }
           .ats-how-it-works:first-child > div { border-radius: 12px !important; }
@@ -653,18 +652,41 @@ export default function ATSForge() {
           color: #a5f3fc !important;
         }
         
-        /* Nav */
+        /* Nav — keep steps in document flow (absolute centering caused huge mobile gaps) */
         nav, .ats-nav {
           background: rgba(5,7,10,0.85) !important;
           backdrop-filter: blur(12px) !important;
           border-bottom: 2px solid #ff003c !important;
           box-shadow: 0 0 20px rgba(255,0,60,0.15) !important;
           justify-content: flex-start !important;
+          align-items: center !important;
+          flex-wrap: wrap !important;
+          row-gap: 8px !important;
+          column-gap: clamp(12px, 2vw, 28px) !important;
         }
         .ats-nav-badges {
-          position: absolute !important;
-          left: 50% !important;
-          transform: translateX(-50%) !important;
+          position: relative !important;
+          left: auto !important;
+          right: auto !important;
+          transform: none !important;
+          display: flex !important;
+          flex-wrap: wrap !important;
+          align-items: center !important;
+          justify-content: center !important;
+          flex: 0 1 auto !important;
+          min-width: 0 !important;
+          gap: 4px !important;
+          padding: 0 !important;
+        }
+        @media (min-width: 769px) {
+          nav.ats-nav > div:first-child,
+          .ats-nav-meta {
+            flex: 0 0 auto !important;
+          }
+          /* Logo + ATSForge on the left; steps + meta cluster on the right */
+          nav.ats-nav > div:first-child.ats-nav-brand {
+            margin-right: auto !important;
+          }
         }
         nav *, .ats-nav * { color: #00f3ff !important; }
         nav > div > div > div:first-child {
@@ -851,140 +873,56 @@ export default function ATSForge() {
         ::-webkit-scrollbar-track { background: #05070a !important; }
         ::-webkit-scrollbar-thumb { background: #ff003c !important; border-radius: 0 !important; }
 
-        /* ========== Mobile / tablet layout (must follow cyber nav rules) ========== */
-        .ats-main-grid {
-          display: grid !important;
-          grid-template-columns: 1fr !important;
-          gap: 16px !important;
-          align-items: start !important;
-          width: 100% !important;
-          max-width: 100% !important;
-          min-width: 0 !important;
-          box-sizing: border-box !important;
-        }
-        @media (min-width: 900px) {
-          .ats-main-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 18px !important; }
-        }
-        @media (min-width: 1180px) {
-          .ats-main-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-        }
-        .ats-page-shell {
-          box-sizing: border-box !important;
-          max-width: 100% !important;
-          padding-left: max(16px, env(safe-area-inset-left)) !important;
-          padding-right: max(16px, env(safe-area-inset-right)) !important;
-        }
-        @media (max-width: 480px) {
-          .ats-page-shell { padding-top: 20px !important; padding-bottom: 48px !important; }
-        }
-        .ats-score-donut-wrap { min-width: 0 !important; }
-        .ats-score-donut-row {
-          display: flex !important;
-          align-items: flex-start !important;
-          gap: 12px !important;
-          flex-wrap: wrap !important;
-        }
-        @media (max-width: 480px) {
-          .ats-score-donut-row { flex-direction: column !important; align-items: center !important; text-align: center !important; }
-          .ats-score-donut-row > div:last-child { width: 100% !important; }
-        }
-        .ats-how-wrap {
-          display: flex !important;
-          flex-wrap: wrap !important;
-          justify-content: center !important;
-          gap: 0 !important;
-          width: 100% !important;
-          max-width: 100% !important;
-        }
-        @media (max-width: 640px) {
-          .ats-how-wrap { flex-direction: column !important; align-items: stretch !important; padding: 0 4px !important; }
-          .ats-how-wrap > div { width: 100% !important; max-width: 100% !important; justify-content: center !important; }
-          .ats-how-wrap .ats-how-card {
-            border-radius: 12px !important;
-            border: 1px solid #ebebeb !important;
-            min-width: 0 !important;
-            width: 100% !important;
-            max-width: 420px !important;
-            margin: 0 auto 12px !important;
-          }
-          .ats-how-arrow { display: none !important; }
-        }
+        /* Phone: hide step progress row; shrink nav so pink border sits tighter under logo */
         @media (max-width: 768px) {
-          nav.ats-nav,
-          nav[class*="ats-nav"] {
-            flex-direction: column !important;
-            align-items: stretch !important;
-            gap: 12px !important;
-            padding: 12px max(14px, env(safe-area-inset-right)) 12px max(14px, env(safe-area-inset-left)) !important;
-            min-height: 0 !important;
-          }
+          nav > div:first-child.ats-nav-brand { margin-right: 0 !important; }
+          nav > div:first-child { order: 1 !important; }
           .ats-nav-badges {
-            position: relative !important;
-            left: auto !important;
-            right: auto !important;
-            transform: none !important;
-            display: flex !important;
-            flex-wrap: wrap !important;
-            justify-content: center !important;
+            display: none !important;
+            width: 0 !important; height: 0 !important; overflow: hidden !important;
+            margin: 0 !important; padding: 0 !important; flex: 0 0 0 !important; border: none !important;
+            visibility: hidden !important; pointer-events: none !important;
+          }
+          .ats-nav-meta { order: 2 !important; width: 100% !important; text-align: center !important; margin-top: 0 !important; }
+          nav.ats-nav,
+          nav.ats-nav {
+            padding: 6px 12px 6px !important;
+            row-gap: 2px !important;
+            column-gap: 8px !important;
             align-items: center !important;
-            gap: 8px 10px !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            order: 2 !important;
-            padding: 8px 0 !important;
           }
-          .ats-nav-badges > div { flex-wrap: wrap !important; justify-content: center !important; }
-          .ats-nav-badges span {
-            white-space: normal !important;
-            text-align: center !important;
-            max-width: 88px !important;
-            line-height: 1.2 !important;
-          }
-          nav.ats-nav > div:first-child { order: 1 !important; flex-wrap: wrap !important; }
-          .ats-nav-meta {
-            order: 3 !important;
-            text-align: center !important;
-            width: 100% !important;
-            font-size: 9px !important;
-            padding: 6px 10px !important;
-          }
-          .ats-hero { padding: 32px max(16px, env(safe-area-inset-left)) 40px max(16px, env(safe-area-inset-right)) !important; }
-          .ats-hero .ats-hero-badge { font-size: 8px !important; letter-spacing: 0.2em !important; padding: 6px 12px !important; max-width: 100%; box-sizing: border-box; }
-        }
-        @media (max-width: 380px) {
-          .ats-nav-meta { font-size: 8px !important; padding: 5px 8px !important; letter-spacing: 0.05em !important; }
         }
       `}</style>
 
       {/* ---- NAVBAR ---- */}
-      <nav className="ats-nav" style={{ background: "#fff", borderBottom: "1px solid #ebebeb", padding: "14px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, flexWrap: "wrap", gap: 12, boxSizing: "border-box", maxWidth: "100vw" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0, flex: "1 1 auto" }}>
+      <nav className="ats-nav" style={{ background: "#fff", borderBottom: "1px solid #ebebeb", padding: "14px 32px", display: "flex", alignItems: "center", justifyContent: "flex-start", position: "sticky", top: 0, zIndex: 100, flexWrap: "wrap", gap: 10, columnGap: 24 }}>
+        <div className="ats-nav-brand" style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
           <img className="ats-brand-mark" src="/brand-logo.png" alt="ATSForge" width={40} height={40} style={{ width: 40, height: 40 }} />
           <div>
             <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 16, color: "#111", letterSpacing: "-0.4px" }}>ATS<span style={{ color: P }}>Forge</span></div>
             <div style={{ fontSize: 9, color: "#bbb", letterSpacing: "2.5px" }}>RESUME OPTIMIZER</div>
           </div>
         </div>
-        <div className="ats-nav-badges" style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0, flex: "1 1 220px", justifyContent: "center" }}>
+        <div className="ats-nav-badges" style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0, flex: "1 1 auto", justifyContent: "center" }}>
           {[["1", "Upload"], ["2", "Job Description"], ["3", "LaTeX Output"]].map(([n, label], i) => (
-            <div key={n} style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
+            <div key={n} style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <Badge n={n} active={step === i + 1} done={step > i + 1} />
-              <span style={{ fontSize: 10, color: step >= i + 1 ? "#555" : "#ccc", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{label}</span>
+              <span style={{ fontSize: 10, color: step >= i + 1 ? "#555" : "#ccc", whiteSpace: "nowrap" }}>{label}</span>
               {i < 2 && <div style={{ width: 22, height: 1, background: step > i + 1 ? P : "#e0e0e0", margin: "0 2px", transition: "background .3s" }} />}
             </div>
           ))}
         </div>
-        <div className="ats-nav-meta" style={{ fontSize: 10, color: "#999", background: "#f8f8f8", border: "1px solid #eee", borderRadius: 20, padding: "4px 14px", flex: "0 1 auto", textAlign: "center" }}>Powered by Claude AI</div>
+        <div className="ats-nav-meta" style={{ fontSize: 10, color: "#999", background: "#f8f8f8", border: "1px solid #eee", borderRadius: 20, padding: "4px 14px", flexShrink: 0 }}>Powered by Claude AI</div>
       </nav>
 
       {/* ---- HERO ---- */}
-      <div className="ats-hero" style={{ background: "linear-gradient(155deg,#18063d 0%,#2d0f6e 55%,#0f1a35 100%)", padding: "46px max(20px, env(safe-area-inset-left)) 58px max(20px, env(safe-area-inset-right))", textAlign: "center", position: "relative", overflow: "hidden", boxSizing: "border-box" }}>
+      <div className="ats-hero" style={{ background: "linear-gradient(155deg,#18063d 0%,#2d0f6e 55%,#0f1a35 100%)", padding: "46px 40px 58px", textAlign: "center", position: "relative", overflow: "hidden", marginTop: 0 }}>
         {[["-60px", "12%", 220, "#7c3aed18"], ["-10px", null, "8%", 180, "#10b98118"], ["auto", null, null, 160, "#a855f718"]].map((b, i) => (
           <div key={i} style={{ position: "absolute", borderRadius: "50%", pointerEvents: "none", width: [220, 180, 160][i], height: [220, 180, 160][i], background: ["#7c3aed18", "#10b98118", "#a855f718"][i], top: ["-60px", "-10px", "auto"][i], bottom: ["auto", "auto", "-30px"][i], left: ["12%", "auto", "45%"][i], right: ["auto", "8%", "auto"][i], filter: "blur(50px)", zIndex: 0 }} />
         ))}
         <HeroFloatingLogos />
         <div style={{ position: "relative", zIndex: 2 }}>
-          <div className="ats-hero-badge" style={{ display: "inline-block", fontSize: 10, letterSpacing: "4px", color: "#c084fc", border: "1px solid #6d28d944", borderRadius: 20, padding: "5px 18px", background: "#4c1d9520", marginBottom: 18, maxWidth: "min(100%, 420px)", boxSizing: "border-box" }}>90%+ ATS SCORE GUARANTEED</div>
+          <div className="ats-hero-badge" style={{ display: "inline-block", fontSize: 10, letterSpacing: "4px", color: "#c084fc", border: "1px solid #6d28d944", borderRadius: 20, padding: "5px 18px", background: "#4c1d9520", marginBottom: 18 }}>90%+ ATS SCORE GUARANTEED</div>
           <h1 style={{ fontFamily: "'Syne',sans-serif", fontSize: "clamp(26px,4.5vw,44px)", fontWeight: 800, color: "#fff", margin: "0 0 14px", lineHeight: 1.1, letterSpacing: "-1px" }}>
             Tailor Any Resume to<br /><span style={{ color: "#c084fc" }}>Any Job - Instantly</span>
           </h1>
@@ -995,8 +933,8 @@ export default function ATSForge() {
       </div>
 
       {/* ---- 3-COLUMN GRID ---- */}
-      <div className="ats-page-shell" style={{ maxWidth: 1300, margin: "0 auto", padding: "30px 20px 60px", boxSizing: "border-box", width: "100%" }}>
-        <div className="ats-main-grid">
+      <div style={{ maxWidth: 1300, margin: "0 auto", padding: "30px 20px 60px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 18, alignItems: "start" }}>
 
           {/* ==== COL 1: UPLOAD ==== */}
           <div style={{ background: "#fff", borderRadius: 14, border: "1px solid #e8e8e8", overflow: "hidden", boxShadow: "0 1px 8px #0000050a" }}>
@@ -1128,7 +1066,7 @@ export default function ATSForge() {
         {/* ---- HOW IT WORKS ---- */}
         <div style={{ marginTop: 52, textAlign: "center" }}>
           <div style={{ fontSize: 9, color: "#ccc", letterSpacing: "4px", marginBottom: 24 }}>HOW IT WORKS</div>
-          <div className="ats-how-wrap">
+          <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
             {[
               { icon: "📤", title: "Upload", desc: "PDF, TXT, LaTeX, or Markdown" },
               { icon: "📋", title: "Paste JD", desc: "Drop in the complete job description" },
@@ -1136,12 +1074,12 @@ export default function ATSForge() {
               { icon: "✅", title: "Score 90%+", desc: "Compile on Overleaf and apply" },
             ].map((item, i) => (
               <div key={i} style={{ display: "flex", alignItems: "stretch" }}>
-                <div className="ats-how-card" style={{ textAlign: "center", padding: "20px 24px", background: "#fff", border: "1px solid #ebebeb", borderRadius: i === 0 ? "12px 0 0 12px" : i === 3 ? "0 12px 12px 0" : "0", borderLeft: i > 0 ? "none" : "1px solid #ebebeb", minWidth: 0, flex: "1 1 140px" }}>
+                <div style={{ textAlign: "center", padding: "20px 24px", background: "#fff", border: "1px solid #ebebeb", borderRadius: i === 0 ? "12px 0 0 12px" : i === 3 ? "0 12px 12px 0" : "0", borderLeft: i > 0 ? "none" : "1px solid #ebebeb", minWidth: 148 }}>
                   <div style={{ fontSize: 24, marginBottom: 8 }}>{item.icon}</div>
                   <div style={{ fontSize: 12, fontWeight: 700, color: "#111", marginBottom: 4, fontFamily: "'Syne',sans-serif" }}>{item.title}</div>
                   <div style={{ fontSize: 10, color: "#999", lineHeight: 1.6 }}>{item.desc}</div>
                 </div>
-                {i < 3 && <div className="ats-how-arrow" style={{ display: "flex", alignItems: "center", padding: "0 1px" }}><div style={{ fontSize: 14, color: "#e0e0e0" }}>›</div></div>}
+                {i < 3 && <div style={{ display: "flex", alignItems: "center", padding: "0 1px" }}><div style={{ fontSize: 14, color: "#e0e0e0" }}>›</div></div>}
               </div>
             ))}
           </div>
